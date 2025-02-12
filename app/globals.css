@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Primary Colors */
+  --white: #ffffff;
+  --background-grey: #f4f4f7;
+  --telus-purple: #4b286d;
+  --telus-green: #66cc00;
+  --accessible-green: #2b8000;
+  --thunder: #2c2e30;
+  --charcoal: #414547;
+  --shuttle: #676e73;
+  --cloud: #b2b9bf;
+  --mystic: #e3e6e8;
+  --alabaster: #fafafa;
+
+  /* Secondary Colors */
+  --blue-darker: #1c383b;
+  --blue-eastern: #22aca4;
+  --blue-lightest: #eaf5f6;
+  --cerise-dark: #761e44;
+  --cerise: #d2377a;
+  --cerise-light: #fceff5;
+  --crimson: #c12335;
+  --crimson-light: #e12339;
+  --crimson-lightest: #fff6f8;
+  --raja-darkest: #8c5415;
+  --raja: #faca69;
+  --raja-lightest: #fff9ee;
+}
+
+body {
+  color: var(--charcoal);
+  background-color: var(--white);
+}
+
+h1,
+h2 {
+  color: var(--telus-purple);
+  font-weight: bold;
+}
+
+h3,
+h4,
+h5,
+h6,
+.text-small,
+.text-micro {
+  color: var(--thunder);
+}
+
+.text-medium,
+.text-large {
+  color: var(--charcoal);
+}
+
+a {
+  color: var(--shuttle);
+}
+
+input,
+select,
+textarea {
+  color: var(--shuttle);
+  border-color: var(--shuttle);
+}
+
+.bg-telus-purple {
+  background-color: var(--telus-purple);
+}
+
+.text-telus-purple {
+  color: var(--telus-purple);
+}
+
+.bg-alabaster {
+  background-color: var(--alabaster);
+}
+
+.bg-background-grey {
+  background-color: var(--background-grey);
+}
+
+.border-mystic {
+  border-color: var(--mystic);
+}
+
+/* Secondary color utility classes */
+.bg-blue-darker {
+  background-color: var(--blue-darker);
+}
+.bg-blue-eastern {
+  background-color: var(--blue-eastern);
+}
+.bg-blue-lightest {
+  background-color: var(--blue-lightest);
+}
+.bg-cerise-dark {
+  background-color: var(--cerise-dark);
+}
+.bg-cerise {
+  background-color: var(--cerise);
+}
+.bg-cerise-light {
+  background-color: var(--cerise-light);
+}
+.bg-crimson {
+  background-color: var(--crimson);
+}
+.bg-crimson-light {
+  background-color: var(--crimson-light);
+}
+.bg-crimson-lightest {
+  background-color: var(--crimson-lightest);
+}
+.bg-raja-darkest {
+  background-color: var(--raja-darkest);
+}
+.bg-raja {
+  background-color: var(--raja);
+}
+.bg-raja-lightest {
+  background-color: var(--raja-lightest);
+}
+
+.text-blue-darker {
+  color: var(--blue-darker);
+}
+.text-blue-eastern {
+  color: var(--blue-eastern);
+}
+.text-cerise-dark {
+  color: var(--cerise-dark);
+}
+.text-cerise {
+  color: var(--cerise);
+}
+.text-crimson {
+  color: var(--crimson);
+}
+.text-raja-darkest {
+  color: var(--raja-darkest);
+}
+
+/* Add these utility classes at the end of the file */
+.text-high-contrast {
+  color: var(--white);
+}
+
+.text-medium-contrast {
+  color: var(--alabaster);
+}
+
+.bg-telus-purple-light {
+  background-color: #5e3987; /* A lighter shade of TELUS Purple for better contrast */
+}
+
+.hover-bg-telus-purple-light:hover {
+  background-color: #5e3987;
+}
+
+.focus-visible-ring {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-telus-purple;
+}
+
