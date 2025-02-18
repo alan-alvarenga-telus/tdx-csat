@@ -1,15 +1,21 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { useForm, type SubmitHandler, Controller } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useForm, type SubmitHandler, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const formSchema = z.object({
   teamLeader: z.string().min(1, "Please select a Team Leader"),
@@ -23,20 +29,20 @@ const formSchema = z.object({
     )
     .min(1, "At least one team member must be selected"),
   surveyTemplate: z.string().min(1, "Please select a survey template"),
-})
+});
 
-type FormData = z.infer<typeof formSchema>
+type FormData = z.infer<typeof formSchema>;
 
 const steps = [
   { title: "Select Team Leader", fields: ["teamLeader"] },
   { title: "Confirm Team Members", fields: ["teamMembers"] },
   { title: "Choose Survey", fields: ["surveyTemplate"] },
   { title: "Review and Submit", fields: [] },
-]
+];
 
 export function MultiStepForm() {
-  const [currentStep, setCurrentStep] = useState(0)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
@@ -52,28 +58,28 @@ export function MultiStepForm() {
     defaultValues: {
       teamMembers: [],
     },
-  })
+  });
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     // TODO: Implement API call to submit evaluation data
-    console.log(data)
-    await new Promise((resolve) => setTimeout(resolve, 2000)) // Simulating API call
-    setIsSubmitting(false)
+    console.log(data);
+    await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulating API call
+    setIsSubmitting(false);
     // TODO: Handle success/error states
-  }
+  };
 
   const nextStep = async () => {
-    const fields = steps[currentStep].fields
-    const isStepValid = await trigger(fields as any)
+    const fields = steps[currentStep].fields;
+    const isStepValid = await trigger(fields as any);
     if (isStepValid) {
-      setCurrentStep((prev) => prev + 1)
+      setCurrentStep((prev) => prev + 1);
     }
-  }
+  };
 
   const prevStep = () => {
-    setCurrentStep((prev) => prev - 1)
-  }
+    setCurrentStep((prev) => prev - 1);
+  };
 
   const fetchTeamMembers = async (teamLeaderId: string) => {
     // TODO: Implement API call to fetch team members
@@ -82,9 +88,9 @@ export function MultiStepForm() {
       { id: "1", name: "John Doe", confirmed: false },
       { id: "2", name: "Jane Smith", confirmed: false },
       { id: "3", name: "Alice Johnson", confirmed: false },
-    ]
-    setValue("teamMembers", mockTeamMembers)
-  }
+    ];
+    setValue("teamMembers", mockTeamMembers);
+  };
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -107,12 +113,12 @@ export function MultiStepForm() {
                     render={({ field }) => (
                       <Select
                         onValueChange={(value) => {
-                          field.onChange(value)
-                          fetchTeamMembers(value)
+                          field.onChange(value);
+                          fetchTeamMembers(value);
                         }}
                         value={field.value}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Team Leader" />
                         </SelectTrigger>
                         <SelectContent>
@@ -123,7 +129,11 @@ export function MultiStepForm() {
                       </Select>
                     )}
                   />
-                  {errors.teamLeader && <p className="text-crimson text-sm mt-1">{errors.teamLeader.message}</p>}
+                  {errors.teamLeader && (
+                    <p className="text-crimson text-sm mt-1">
+                      {errors.teamLeader.message}
+                    </p>
+                  )}
                 </div>
               </div>
             )}
@@ -137,13 +147,21 @@ export function MultiStepForm() {
                       name={`teamMembers.${index}.confirmed`}
                       control={control}
                       render={({ field }) => (
-                        <Checkbox id={`member-${member.id}`} checked={field.value} onCheckedChange={field.onChange} />
+                        <Checkbox
+                          id={`member-${member.id}`}
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
                       )}
                     />
                     <Label htmlFor={`member-${member.id}`}>{member.name}</Label>
                   </div>
                 ))}
-                {errors.teamMembers && <p className="text-crimson text-sm mt-1">{errors.teamMembers.message}</p>}
+                {errors.teamMembers && (
+                  <p className="text-crimson text-sm mt-1">
+                    {errors.teamMembers.message}
+                  </p>
+                )}
               </div>
             )}
 
@@ -155,20 +173,31 @@ export function MultiStepForm() {
                     name="surveyTemplate"
                     control={control}
                     render={({ field }) => (
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <SelectTrigger>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Survey Template" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="ST1">Quarterly Performance Review</SelectItem>
-                          <SelectItem value="ST2">Project Feedback Survey</SelectItem>
-                          <SelectItem value="ST3">Team Collaboration Assessment</SelectItem>
+                          <SelectItem value="ST1">
+                            Quarterly Performance Review
+                          </SelectItem>
+                          <SelectItem value="ST2">
+                            Project Feedback Survey
+                          </SelectItem>
+                          <SelectItem value="ST3">
+                            Team Collaboration Assessment
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     )}
                   />
                   {errors.surveyTemplate && (
-                    <p className="text-crimson text-sm mt-1">{errors.surveyTemplate.message}</p>
+                    <p className="text-crimson text-sm mt-1">
+                      {errors.surveyTemplate.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -176,7 +205,9 @@ export function MultiStepForm() {
 
             {currentStep === 3 && (
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Review Evaluation Details</h3>
+                <h3 className="text-lg font-semibold">
+                  Review Evaluation Details
+                </h3>
                 <div>
                   <p>
                     <strong>Team Leader:</strong> {watch("teamLeader")}
@@ -202,7 +233,13 @@ export function MultiStepForm() {
 
         <div className="flex justify-between mt-8">
           {currentStep > 0 && (
-            <Button type="button" onClick={prevStep} variant="outline" size="lg" className="min-w-[120px]">
+            <Button
+              type="button"
+              onClick={prevStep}
+              variant="outline"
+              size="lg"
+              className="min-w-[120px]"
+            >
               <ChevronLeft className="w-4 h-4 mr-2" />
               Previous
             </Button>
@@ -231,6 +268,5 @@ export function MultiStepForm() {
         </div>
       </form>
     </div>
-  )
+  );
 }
-

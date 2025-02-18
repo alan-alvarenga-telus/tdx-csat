@@ -1,41 +1,62 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useForm, Controller } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import { motion, AnimatePresence } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { toast } from "@/components/ui/use-toast"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChevronLeft, ChevronRight, HelpCircle } from "lucide-react"
+import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { SelectContent, SelectItem } from "@/components/ui/select";
+import { SelectPrimitive } from "@/components/ui/select-primitive";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { toast } from "@/components/ui/use-toast";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { ChevronLeft, ChevronRight, HelpCircle } from "lucide-react";
 
-const phoneRegex = new RegExp(/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/)
+const phoneRegex = new RegExp(
+  /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/,
+);
 
 const userSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   phone: z.string().regex(phoneRegex, "Invalid phone number"),
-  role: z.enum(["Director of IT", "AGM", "OM", "TDTL", "Team Leader", "Team Member"]),
+  role: z.enum([
+    "Director of IT",
+    "AGM",
+    "OM",
+    "TDTL",
+    "Team Leader",
+    "Team Member",
+  ]),
   lob: z.string().min(1, "Please select a Line of Business"),
   startDate: z.string().min(1, "Please select a start date"),
-})
+});
 
-type UserFormData = z.infer<typeof userSchema>
+type UserFormData = z.infer<typeof userSchema>;
 
 const steps = [
   { title: "Personal Info", fields: ["name", "email", "phone"] },
   { title: "Role & LOB", fields: ["role", "lob"] },
   { title: "Additional Info", fields: ["startDate"] },
-]
+];
 
 export function UserAccountForm() {
-  const [currentStep, setCurrentStep] = useState(0)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
@@ -47,48 +68,50 @@ export function UserAccountForm() {
   } = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
     mode: "onChange",
-  })
+  });
 
   const onSubmit = async (data: UserFormData) => {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     // TODO: Implement API call to create/update user account
-    console.log(data)
-    await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulating API call
-    setIsSubmitting(false)
+    console.log(data);
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulating API call
+    setIsSubmitting(false);
     toast({
       title: "User Account Updated",
       description: `${data.name}'s account has been successfully updated.`,
-    })
-    setCurrentStep(0)
-  }
+    });
+    setCurrentStep(0);
+  };
 
   const nextStep = async () => {
-    const fields = steps[currentStep].fields
-    const isStepValid = await trigger(fields as any)
+    const fields = steps[currentStep].fields;
+    const isStepValid = await trigger(fields as any);
     if (isStepValid) {
-      setCurrentStep((prev) => prev + 1)
+      setCurrentStep((prev) => prev + 1);
     }
-  }
+  };
 
   const prevStep = () => {
-    setCurrentStep((prev) => prev - 1)
-  }
+    setCurrentStep((prev) => prev - 1);
+  };
 
   const formatPhoneNumber = (value: string) => {
-    const phoneNumber = value.replace(/[^\d]/g, "")
-    const phoneNumberLength = phoneNumber.length
-    if (phoneNumberLength < 4) return phoneNumber
+    const phoneNumber = value.replace(/[^\d]/g, "");
+    const phoneNumberLength = phoneNumber.length;
+    if (phoneNumberLength < 4) return phoneNumber;
     if (phoneNumberLength < 7) {
-      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`
+      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
     }
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`
-  }
+    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+  };
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
         <CardTitle>User Account Management</CardTitle>
-        <CardDescription>Add or edit user accounts and assign roles</CardDescription>
+        <CardDescription>
+          Add or edit user accounts and assign roles
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="mb-8">
@@ -97,13 +120,17 @@ export function UserAccountForm() {
               <div key={step.title} className="flex items-center">
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    index <= currentStep ? "bg-telus-purple text-white" : "bg-gray-200 text-gray-600"
+                    index <= currentStep
+                      ? "bg-telus-purple text-white"
+                      : "bg-gray-200 text-gray-600"
                   }`}
                 >
                   {index + 1}
                 </div>
                 {index < steps.length - 1 && (
-                  <div className={`h-1 w-full ${index < currentStep ? "bg-telus-purple" : "bg-gray-200"}`} />
+                  <div
+                    className={`h-1 w-full ${index < currentStep ? "bg-telus-purple" : "bg-gray-200"}`}
+                  />
                 )}
               </div>
             ))}
@@ -130,13 +157,30 @@ export function UserAccountForm() {
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="name">Name</Label>
-                    <Input id="name" {...register("name")} placeholder="Enter full name" />
-                    {errors.name && <p className="text-sm text-crimson mt-1">{errors.name.message}</p>}
+                    <Input
+                      id="name"
+                      {...register("name")}
+                      placeholder="Enter full name"
+                    />
+                    {errors.name && (
+                      <p className="text-sm text-crimson mt-1">
+                        {errors.name.message}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" {...register("email")} placeholder="Enter email address" />
-                    {errors.email && <p className="text-sm text-crimson mt-1">{errors.email.message}</p>}
+                    <Input
+                      id="email"
+                      type="email"
+                      {...register("email")}
+                      placeholder="Enter email address"
+                    />
+                    {errors.email && (
+                      <p className="text-sm text-crimson mt-1">
+                        {errors.email.message}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="phone">Phone</Label>
@@ -145,10 +189,14 @@ export function UserAccountForm() {
                       {...register("phone")}
                       placeholder="(123) 456-7890"
                       onChange={(e) => {
-                        e.target.value = formatPhoneNumber(e.target.value)
+                        e.target.value = formatPhoneNumber(e.target.value);
                       }}
                     />
-                    {errors.phone && <p className="text-sm text-crimson mt-1">{errors.phone.message}</p>}
+                    {errors.phone && (
+                      <p className="text-sm text-crimson mt-1">
+                        {errors.phone.message}
+                      </p>
+                    )}
                   </div>
                 </div>
               )}
@@ -161,22 +209,37 @@ export function UserAccountForm() {
                       name="role"
                       control={control}
                       render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a role" />
-                          </SelectTrigger>
+                        <SelectPrimitive.Root
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectPrimitive.Trigger className="w-full border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                            <SelectPrimitive.Value placeholder="Select a role" />
+                          </SelectPrimitive.Trigger>
                           <SelectContent>
-                            <SelectItem value="Director of IT">Director of IT</SelectItem>
+                            <SelectItem value="Director of IT">
+                              Director of IT
+                            </SelectItem>
                             <SelectItem value="AGM">AGM</SelectItem>
                             <SelectItem value="OM">OM</SelectItem>
-                            <SelectItem value="TDTL">TELUS Digital Team Lead</SelectItem>
-                            <SelectItem value="Team Leader">Team Leader</SelectItem>
-                            <SelectItem value="Team Member">Team Member</SelectItem>
+                            <SelectItem value="TDTL">
+                              TELUS Digital Team Lead
+                            </SelectItem>
+                            <SelectItem value="Team Leader">
+                              Team Leader
+                            </SelectItem>
+                            <SelectItem value="Team Member">
+                              Team Member
+                            </SelectItem>
                           </SelectContent>
-                        </Select>
+                        </SelectPrimitive.Root>
                       )}
                     />
-                    {errors.role && <p className="text-sm text-crimson mt-1">{errors.role.message}</p>}
+                    {errors.role && (
+                      <p className="text-sm text-crimson mt-1">
+                        {errors.role.message}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="lob">Line of Business</Label>
@@ -184,20 +247,31 @@ export function UserAccountForm() {
                       name="lob"
                       control={control}
                       render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a Line of Business" />
-                          </SelectTrigger>
+                        <SelectPrimitive.Root
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectPrimitive.Trigger className="w-full border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                            <SelectPrimitive.Value placeholder="Select a Line of Business" />
+                          </SelectPrimitive.Trigger>
                           <SelectContent>
-                            <SelectItem value="lob1">Frontend Development</SelectItem>
-                            <SelectItem value="lob2">Backend Development</SelectItem>
+                            <SelectItem value="lob1">
+                              Frontend Development
+                            </SelectItem>
+                            <SelectItem value="lob2">
+                              Backend Development
+                            </SelectItem>
                             <SelectItem value="lob3">DevOps</SelectItem>
                             <SelectItem value="lob4">UX Design</SelectItem>
                           </SelectContent>
-                        </Select>
+                        </SelectPrimitive.Root>
                       )}
                     />
-                    {errors.lob && <p className="text-sm text-crimson mt-1">{errors.lob.message}</p>}
+                    {errors.lob && (
+                      <p className="text-sm text-crimson mt-1">
+                        {errors.lob.message}
+                      </p>
+                    )}
                   </div>
                 </div>
               )}
@@ -210,16 +284,26 @@ export function UserAccountForm() {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <div className="relative">
-                            <Input id="startDate" type="date" {...register("startDate")} />
+                            <Input
+                              id="startDate"
+                              type="date"
+                              {...register("startDate")}
+                            />
                             <HelpCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                           </div>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Select the user's start date in the organization</p>
+                          <p>
+                            Select the user's start date in the organization
+                          </p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
-                    {errors.startDate && <p className="text-sm text-crimson mt-1">{errors.startDate.message}</p>}
+                    {errors.startDate && (
+                      <p className="text-sm text-crimson mt-1">
+                        {errors.startDate.message}
+                      </p>
+                    )}
                   </div>
                 </div>
               )}
@@ -239,7 +323,11 @@ export function UserAccountForm() {
                 <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
             ) : (
-              <Button type="submit" disabled={!isValid || isSubmitting} className="ml-auto">
+              <Button
+                type="submit"
+                disabled={!isValid || isSubmitting}
+                className="ml-auto"
+              >
                 {isSubmitting ? "Saving..." : "Save User Account"}
               </Button>
             )}
@@ -247,6 +335,5 @@ export function UserAccountForm() {
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }
-
